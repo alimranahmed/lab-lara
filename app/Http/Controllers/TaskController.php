@@ -3,23 +3,21 @@
 namespace App\Http\Controllers;
 
 
-use App\Enums\TaskStatus;
 use App\Models\Task;
-use Illuminate\Support\Collection;
+use Illuminate\Http\JsonResponse;
 
 class TaskController extends Controller
 {
-    public function index(TaskStatus $status)
+    public function delete(Task $task): JsonResponse
     {
-        return $this->getByStatus($status);
+        $task->delete();
+        return response()->json(['message' => 'Task deleted successfully!']);
     }
 
-    protected function getByStatus(TaskStatus $status): Collection
+    public function restore($taskId)
     {
-        return Task::select('name', 'status')
-            ->where('status', $status)
-            ->latest()
-            ->take(10)
-            ->get();
+        $deletedTask = Task::withTrashed()->find($taskId);
+        //$deletedTask->restoreQuietly();
+        return response()->json(['Task restored successfully!']);
     }
 }
