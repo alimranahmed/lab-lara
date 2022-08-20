@@ -17,7 +17,8 @@ class TaskController extends Controller
     public function restore($taskId)
     {
         $deletedTask = Task::withTrashed()->find($taskId);
-        //$deletedTask->restoreQuietly();
+//        $deletedTask->restore();
+        $deletedTask->restoreQuietly();
         return response()->json(['Task restored successfully!']);
     }
 }
